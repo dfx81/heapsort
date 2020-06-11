@@ -125,10 +125,10 @@ class Heapsort {
                / \
               4   5
              / \
-            2  [1] -- 
+            2  [1] -- There might be subtree beneath the former root
             
         Finally, perform heapify one more time on this new root to
-        make sure it was the largest.
+        make sure it was the largest on the subtree it was on (just in case).
         
         -- DURING SORT PROCESS --
         
