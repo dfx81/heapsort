@@ -1,8 +1,8 @@
 /* Heapsort
  * ---
  * Author : - Danial Fitri Ghazali (272868)
- *          - Afirudin Jamilan (ABCDEF)
- *          - Shamil Shahimi (GHIJKL)
+ *          - Afirudin Jamilan (273829)
+ *          - Shamil Shahimi (272850)
  * ---
  * Description: A heapsort implementation for
  *              Data Structure project
@@ -10,6 +10,8 @@
  *        - Call sort() method to start sorting (returns the sorted array)
  *        - Call setArray(int[] arr) to set a new array to be sorted
  */
+
+import java.util.Scanner;
 
 class Heapsort {
     // Properties
@@ -20,14 +22,27 @@ class Heapsort {
     private int[] arr;
     private int length;
     
+    private final boolean step;
+    private final Scanner in;
+    
     // Constructor
     // ---
     // Pass an int array to be sorted
     // Then the user can call sort to start sorting
-    public Heapsort(int[] arr) {
+    public Heapsort(int[] arr, boolean step) {
         this.arr = arr;
+        this.step = step;
         length = arr.length;
+        in = new Scanner(System.in);
+        
+        System.out.print("\nINITIAL ARRAY: ");
         print();
+        
+        if (step) {
+            getInput();
+        } else {
+            System.out.println();
+        }
     }
     
     // Call sort method to start the heapsort
@@ -58,13 +73,29 @@ class Heapsort {
            become max heap faster.
          */
         for (int i = arr.length / 2 - 1; i >= 0; i--) {
+            System.out.println("Working on index " + i + " (" + arr[i] + ") - "
+                + "Child nodes : index " + (i * 2 + 1) + " (" + arr[i * 2 + 1] + ") & index "
+                + (i * 2 + 2) + " (" + arr[i * 2 + 2] + ")");
+            
             heapify(i);
+            System.out.print("Current array state: ");
             print();
+            
+            if (step) {
+                getInput();
+            } else {
+                System.out.println();
+            }
         }
         
         System.out.print("\nMAX HEAP: ");
         print();
-        System.out.println();
+        
+        if (step) {
+            getInput();
+        } else {
+            System.out.println();
+        }
         
         // Due to max heap, the largest value should be
         // at the root of the tree.
@@ -74,11 +105,30 @@ class Heapsort {
         // to bring the next largest value to the root.
         // Reduce length by 1 to avoid tampering with the
         // lower indices, which stored the sorted values.
-        for (int i = --length; i >= 0; i--) {
+        for (int i = --length; i > 0; i--) {
+            System.out.println("Swapping " + arr[0] + " with " + arr[i]);
             swap(0, i);
+            
+            String text = "Working on index " + 0 + " (" + arr[0] + ") - "
+                + "Child nodes ";
+            
+            if (0 * 2 + 1 < length)
+                text +=  ": Left child index - " + (0 * 2 + 1) + " (" + arr[0 * 2 + 1] + ") ";
+            if (0 * 2 + 2 < length)
+                text += ": Right child index - " + (0 * 2 + 2) + " (" + arr[0 * 2 + 2] + ")";
+            
+            System.out.println(text);
+            
             heapify(0);
             length--;
+            System.out.print("Current array state: ");
             print();
+            
+            if (step) {
+                getInput();
+            } else {
+                System.out.println();
+            }
         }
         
         System.out.print("\nSORTED: ");
@@ -186,6 +236,23 @@ class Heapsort {
         // for another subtree.
         if (largest != i) {
             swap(i, largest);
+            System.out.print("Swapped " + arr[i] + " with " + arr[largest] + ": ");
+            print();
+            
+            String text = "Check current index " + largest + " (" + arr[largest] + ") "
+                + "childs ";
+            
+            if (largest * 2 + 1 < length) {
+                text += ": Left child index - " + (largest * 2 + 1) + " ("
+                + arr[largest * 2 + 1] + ") ";
+            }
+            
+            if (largest * 2 + 2 < length) {
+                text += ": Right child index - " + (largest * 2 + 2) + " ("
+                + arr[largest * 2 + 2] + ")";
+            }
+            
+            System.out.println(text);
             heapify(largest);
         }
     }
@@ -201,10 +268,23 @@ class Heapsort {
     
     // Print method to print current state of arr
     private void print() {
-        for (int i: arr) {
-            System.out.print(i + " ");
+        disp();
+    }
+    
+    private void disp() {
+        System.out.print("[");
+        for (int i = 0; i != arr.length; i++) {
+            if (i != arr.length - 1) {
+                System.out.print(arr[i] + " ");
+            } else {
+                System.out.println(arr[i] + "]");
+            }
         }
-        
+    }
+    
+    private void getInput() {
+        System.out.print("\nPress any key to continue: ");
+        in.next();
         System.out.println();
     }
     
@@ -215,7 +295,26 @@ class Heapsort {
     }
     
     public static void main(String[] args) {
-        int[] arr = {9, 4, 2, 5, 1, 7, 8, 6, 3, 10, 12, 0, 11};
-        new Heapsort(arr).sort();
+        Scanner in = new Scanner(System.in);
+        int[] arr = {7, 8, 5, 10, 3, 12, 1, 14, 0, 13, 2, 11, 4, 9, 6};
+        
+        System.out.print("Use default array with value 0 - 14? (type y to use): ");
+        char useDef = in.next().charAt(0);
+        
+        if (!(useDef == 'y' || useDef == 'Y')) {
+            System.out.print("Enter the number of length of array: ");
+            arr = new int[in.nextInt()];
+            System.out.println();
+        
+            for (int i = 0; i != arr.length; i++) {
+                System.out.print("Number on index " + i + ": ");
+                arr[i] = in.nextInt();
+            }
+        }
+        
+        System.out.print("\nEnable stepping? (type y to enable): ");
+        char step = in.next().charAt(0);
+        
+        new Heapsort(arr, step == 'y' || step == 'Y').sort();
     }
 }
